@@ -4,7 +4,7 @@ export { setupGL, initBuffers, drawScene };
 // Heavy guidance from https://webglfundamentals.org/webgl/lessons/webgl-3d-orthographic.html
 
 async function setupGL(gl, canvas) {
-  const uri = document.baseURI + "hw2/js/";
+  const uri = document.baseURI + "js/";
 
   let vertexShader = await compileShader(
     gl,

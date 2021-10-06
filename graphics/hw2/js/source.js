@@ -1,5 +1,5 @@
 async function getCode(id, file) {
-  const uri = document.baseURI + "hw2/";
+  const uri = document.baseURI;
   const response = await fetch(uri + file);
     document.getElementById(id).innerHTML = await response.text();
 }
