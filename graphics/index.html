@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Based on https://getbootstrap.com/docs/5.1/examples/ -->
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <title>Shrey Pasricha · Computer Graphics</title>
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+
+    <base href="./" />
+  </head>
+  <body>
+    <main>
+      <div class="container py-4">
+        <header class="pb-3 mb-4 border-bottom">
+          <a
+            href="/"
+            class="d-flex align-items-center text-dark text-decoration-none"
+          >
+            <img class="me-3" src="/images/NYU_Short.png" height="32" />
+            <span class="fs-4">Shrey Pasricha</span>
+          </a>
+        </header>
+
+        <div class="row align-items-md-stretch">
+          <div class="col-md-6">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+              <h2>Assignment One (2D)</h2>
+              <p>Periodic motion makes some really beautiful patterns!</p>
+
+              <div style="overflow: hidden">
+                <script type="module" src="hw1/js/Example2D.js"></script>
+                <canvas
+                  id="2DCanvas"
+                  style="overflow: hidden; display: block"
+                ></canvas>
+              </div>
+              <br />
+              <a href="hw1/2d.html" class="btn btn-outline-light" type="button">
+                Fullscreen
+              </a>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="h-100 p-5 bg-light border rounded-3">
+              <h2>Assignment One (3D)</h2>
+              <p>
+                It's an alien spaceship (if you squint hard enough). Move your
+                cursor over it to rotate it!
+              </p>
+
+              <div style="overflow: hidden">
+                <script type="module" src="hw1/js/Example3D.js"></script>
+                <canvas
+                  id="glCanvas"
+                  style="overflow: hidden; display: block"
+                ></canvas>
+              </div>
+              <br />
+              <a
+                href="hw1/3d.html"
+                class="btn btn-outline-secondary"
+                type="button"
+              >
+                Fullscreen
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-md-stretch">
+          <div class="col-md-12">
+            <div class="p-5 mb-4 bg-light rounded-3">
+              <h1 class="display-5 fw-bold">About Me</h1>
+              <h2 class="display-7 fw-light fst-italic mb-4">
+                Assignment Zero
+              </h2>
+              <p class="col-md-12 fs-4">
+                I've always been interested in digital art, especially exploring
+                how the application of mathematics (via programming and
+                engineering) can be used to express an artistic vision, or to
+                illustrate or explain a concept. I've explored different
+                applications of computer graphics, such as 3D modelling and
+                animation, game development, and virtual reality. But I've never
+                actually dug down into inner workings of it, despite wanting to
+                try for a few years now. This course is the perfect opportunity
+                for exactly that!
+              </p>
+              <p class="display-10">
+                In fact, I've actually wanted to take this course since before I
+                even joined NYU, so you could say I'm a tad excited.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <footer class="container px-0 pt-3 mt-4 text-muted border-top">
+          <div class="row">
+            <div class="col-auto me-auto">CSCI-UA 480: Computer Graphics</div>
+            <div class="col-auto">Fall 2021</div>
+          </div>
+        </footer>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
