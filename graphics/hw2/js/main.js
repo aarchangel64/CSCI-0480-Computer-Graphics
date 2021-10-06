@@ -4,7 +4,7 @@ import { setupGL, initBuffers, drawScene } from "./gl.js";
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
 // Make canvas pixel resolution match CSS resolution
-const canvas = setupCanvas("glCanvas");
+const canvas = setupCanvas("hw2");
 const gl = canvas.getContext("webgl");
 
 // Only continue if WebGL is available and working

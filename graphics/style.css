@@ -1,0 +1,17 @@
+.btn-outline-purple {
+    color: #57068c;
+    border-color: #57068c;
+}
+
+.btn-outline-purple:hover {
+    color: #fff;
+    background-color: #57068c;
+    border-color: #57068c;
+}
+
+.thumb {
+    display: block;
+    margin: auto;
+    margin-top: 4%;
+    height: 20em;
+}
