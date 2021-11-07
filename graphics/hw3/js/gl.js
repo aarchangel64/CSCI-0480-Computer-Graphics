@@ -34,7 +34,7 @@ function initBuffers(gl, verts) {
 }
 
 // Render Shaders
-function drawScene(gl, program, buffers, deltaTime, lightCol, sData, mats) {
+function drawScene(gl, program, buffers, deltaTime, lightCol, sData, cube, cM, mats) {
   gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   gl.enable(gl.DEPTH_TEST);
   gl.depthFunc(gl.LEQUAL);
@@ -62,6 +62,9 @@ function drawScene(gl, program, buffers, deltaTime, lightCol, sData, mats) {
 
   gl.uniform4fv(pos("uSpheres"), sData.flat());
   gl.uniformMatrix4fv(pos("uMats"), false, mats);
+
+  gl.uniform4fv(pos("uCube"), cube);
+  gl.uniformMatrix4fv(pos("uCIM"), false, cM);
 
   // Draw!
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);

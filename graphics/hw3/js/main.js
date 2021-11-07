@@ -1,3 +1,5 @@
+// glMatrix Library for fast vector / matrix maths
+import "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 import { setupCanvas } from "./canvas.js";
 import { setupGL, initBuffers, drawScene } from "./gl.js";
 
@@ -16,7 +18,6 @@ if (gl === null) {
 
 // Initialise Shaders
 const program = await setupGL(gl, canvas);
-
 
 // const matList =
 
@@ -49,8 +50,12 @@ const copper = [
 const gold = [
   0.25, 0.15, 0.025, 0, 0.5, 0.3, 0.05, 0, 1, 0.6, 0.1, 3, 0, 0, 0, 0.4,
 ];
-const lead = [0.05, 0.05, 0.05, 0, 0.1, 0.1, 0.1, 0, 0.8, 0.8, 0.8, 10, 0, 0, 0, 0.1];
-const plastic = [0.025, 0.0, 0.0, 0, 0.5, 0.0, 0.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.005];
+const lead = [
+  0.05, 0.05, 0.05, 0, 0.1, 0.1, 0.1, 0, 0.8, 0.8, 0.8, 10, 0, 0, 0, 0.1,
+];
+const plastic = [
+  0.025, 0.0, 0.0, 0, 0.5, 0.0, 0.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.005,
+];
 const mats = [copper, gold, plastic, lead, gold].flat(2);
 
 const verts = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
@@ -83,7 +88,18 @@ function render(now) {
     s[3] = 0.2 + (0.2 * radius.value) / 100;
   });
 
-  drawScene(gl, program, buffers, now, lightCol, sc, mats);
+  let cube = [
+    -1, 0, 0, -1, 1, 0, 0, -1, 0, -1, 0, -1, 0, 1, 0, -1, 0, 0, -1, -1, 0, 0, 1,
+    -1,
+  ];
+
+  // Identity Matrix
+  let cM = [];
+  glMatrix.mat4.fromRotation(cM, now, [1, 0, 1]);
+  glMatrix.mat4.scale(cM, cM, [0.1, 0.5, 0.3]);
+  glMatrix.mat4.invert(cM, cM);
+
+  drawScene(gl, program, buffers, now, lightCol, sc, cube, cM, mats);
   requestAnimationFrame(render);
 }
 

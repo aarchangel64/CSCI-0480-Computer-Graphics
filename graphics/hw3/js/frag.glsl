@@ -106,6 +106,8 @@ vec3 shadeSurface(vec3 P, vec3 W, vec3 N, mat4 m) {
     for (int n = 0; n < uNumSpheres; n++)
       t = max(t, raySphere(P, uLightsDir[l], uSpheres[n]));
 
+    t = max(t, rayCube(P, uLightsDir[l], uCIM).w);
+
     // IF NOT, ADD LIGHTING FROM THIS LIGHT
     if (t < 0.) {
       vec3 R = 2. * dot(N, uLightsDir[l]) * N - uLightsDir[l];
@@ -134,12 +136,14 @@ vec3 trace(vec3 V, vec3 W) {
       if (t > 0. && t < tMin) {
         hit = true;
         P = V + t * W;
-        N = normalize(P - sphere.xyz);
+        // N = normalize(P - sphere.xyz);
         sphere = uSpheres[n];
         mat = uMats[n];
         tMin = t;
       }
     }
+
+    N = normalize(P - sphere.xyz);
 
     vec4 Nt = rayCube(V, W, uCIM);
     if (Nt.w > 0. && Nt.w < tMin) {
