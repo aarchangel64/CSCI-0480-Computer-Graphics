@@ -1,6 +1,6 @@
 #version 300 es
 
-precision mediump float;
+precision highp float;
 
 // MODIFY STRING TO ADD NUMBER OF SPHERES.
 const int uNumSpheres = 5;

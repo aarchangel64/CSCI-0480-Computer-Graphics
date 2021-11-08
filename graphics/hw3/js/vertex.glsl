@@ -1,7 +1,7 @@
 #version 300 es
 
 // Vertex shader program
-precision mediump float;
+precision highp float;
 
 // webgl2: in (attributes) recieves data from a buffer
 layout(location = 0) in vec3 aPos;
