@@ -1,11 +1,13 @@
+#version 300 es
+
 // Vertex shader program
 precision mediump float;
 
-// attributes recieves data from a buffer
-attribute vec3 aPos;
+// webgl2: in (attributes) recieves data from a buffer
+layout(location = 0) in vec3 aPos;
 
-// varyings pass data to the fragment shader
-varying vec3 vPos;
+// webgl2: out (varying) pass data to the fragment shader
+out vec3 vPos;
 
 // uniforms contain shared vertex data from the CPU
 uniform float uTime;

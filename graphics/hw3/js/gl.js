@@ -1,9 +1,15 @@
 import { compileShader, linkShaders } from "./shaders.js";
-export { setupGL, initBuffers, drawScene };
+export { initGL, drawScene };
 
 // Heavy guidance from https://webglfundamentals.org/webgl/lessons/webgl-3d-orthographic.html
 
-async function setupGL(gl, canvas) {
+// function to get uniform position
+let pos = () => null;
+
+let vao;
+let program;
+
+async function initGL(gl, canvas) {
   const uri = document.baseURI + "js/";
 
   let vertexShader = await compileShader(
@@ -17,10 +23,18 @@ async function setupGL(gl, canvas) {
     uri + "frag.glsl",
     gl.FRAGMENT_SHADER
   );
-  return linkShaders(gl, vertexShader, fragmentShader);
-}
 
-function initBuffers(gl, verts) {
+  program = linkShaders(gl, vertexShader, fragmentShader);
+  pos = (name) => gl.getUniformLocation(program, name);
+
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
+  gl.clearDepth(-1);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+
+  const verts = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
+
   // Create a buffer to store scene geometry and face colour
   const positionBuffer = gl.createBuffer();
 
@@ -28,30 +42,23 @@ function initBuffers(gl, verts) {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
 
-  return {
-    pos: positionBuffer,
-  };
-}
-
-// Render Shaders
-function drawScene(gl, program, buffers, deltaTime, lightCol, sData, cube, cM, mats) {
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  gl.enable(gl.DEPTH_TEST);
-  gl.depthFunc(gl.LEQUAL);
-  gl.clearDepth(-1);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-
-  // Use our shader program
-  gl.useProgram(program);
+  vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
 
   // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffers.pos);
   const vertPos = gl.getAttribLocation(program, "aPos");
   gl.vertexAttribPointer(vertPos, 3, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(vertPos);
+}
 
-  const pos = (name) => gl.getUniformLocation(program, name);
+// Render Shaders
+function drawScene(gl, deltaTime, lightCol, sData, cube, cM, mats) {
+
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+  // Use our shader program
+  gl.useProgram(program);
+  gl.bindVertexArray(vao);
 
   //  Set time and angle uniforms for animation
   gl.uniform1f(pos("uTime"), deltaTime);

@@ -1,3 +1,5 @@
+#version 300 es
+
 precision mediump float;
 
 // MODIFY STRING TO ADD NUMBER OF SPHERES.
@@ -17,7 +19,7 @@ uniform vec4 uCube[6];
 uniform mat4 uQ[2];
 
 uniform float uTime;
-varying vec3 vPos;
+in vec3 vPos;
 
 // YOU CAN CHANGE CAMERA FOCAL LENGTH.
 // MAYBE YOU CAN TRY MAKING THIS A SLIDER.
@@ -169,6 +171,8 @@ vec3 trace(vec3 V, vec3 W) {
   return color;
 }
 
+out vec4 renderedColour;
+
 void main() {
 
   // FORM THE RAY FOR THIS PIXEL.
@@ -179,5 +183,5 @@ void main() {
   vec3 t = trace(V, W);
   vec3 color = (t == vec3(0)) ? bgColor : t;
 
-  gl_FragColor = vec4(sqrt(color), 1.);
+  renderedColour = vec4(sqrt(color), 1.);
 }

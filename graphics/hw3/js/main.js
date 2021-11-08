@@ -1,23 +1,23 @@
 // glMatrix Library for fast vector / matrix maths
 import "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 import { setupCanvas } from "./canvas.js";
-import { setupGL, initBuffers, drawScene } from "./gl.js";
+import { initGL, drawScene } from "./gl.js";
 
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
 // Make canvas pixel resolution match CSS resolution
 const canvas = setupCanvas("hw2");
-const gl = canvas.getContext("webgl");
+const gl = canvas.getContext("webgl2");
 
 // Only continue if WebGL is available and working
 if (gl === null) {
   alert(
-    "Unable to initialize WebGL. Your browser or machine may not support it."
+    "Unable to initialize WebGL 2.0. Your browser or machine may not support it."
   );
 }
 
 // Initialise Shaders
-const program = await setupGL(gl, canvas);
+await initGL(gl, canvas);
 
 // const matList =
 
@@ -58,9 +58,6 @@ const plastic = [
 ];
 const mats = [copper, gold, plastic, lead, gold].flat(2);
 
-const verts = [-1, 1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0];
-
-const buffers = initBuffers(gl, verts);
 
 // Function that runs on every frame
 function render(now) {
@@ -99,7 +96,7 @@ function render(now) {
   glMatrix.mat4.scale(cM, cM, [0.1, 0.5, 0.3]);
   glMatrix.mat4.invert(cM, cM);
 
-  drawScene(gl, program, buffers, now, lightCol, sc, cube, cM, mats);
+  drawScene(gl, now, lightCol, sc, cube, cM, mats);
   requestAnimationFrame(render);
 }
 

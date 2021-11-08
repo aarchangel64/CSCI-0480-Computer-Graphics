@@ -2,6 +2,7 @@ export { setupCanvas };
 
 function setupCanvas(id) {
   const canvas = document.getElementById(id);
+  const scale = window.devicePixelRatio;
 
   // Setup an observer to fit the canvas to the entire window
   // From https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
@@ -14,11 +15,11 @@ function setupCanvas(id) {
           ? entry.contentBoxSize[0]
           : entry.contentBoxSize;
 
-        canvas.width = contentBoxSize.inlineSize * 2;
-        canvas.height = contentBoxSize.blockSize * 2;
+        canvas.width = contentBoxSize.inlineSize * scale;
+        canvas.height = contentBoxSize.blockSize * scale;
       } else {
-        canvas.width = entry.contentRect.width * 2;
-        canvas.height = entry.contentRect.height * 2;
+        canvas.width = entry.contentRect.width * scale;
+        canvas.height = entry.contentRect.height * scale;
       }
     }
   });
