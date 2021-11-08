@@ -56,7 +56,12 @@ const lead = [
 const plastic = [
   0.025, 0.0, 0.0, 0, 0.5, 0.0, 0.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.005,
 ];
-const mats = [copper, gold, plastic, lead, gold].flat(2);
+
+const mirror = [
+  0.2, 0.2, 0.2, 0, 1.0, 1.0, 1.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.6,
+];
+
+const mats = [copper, gold, plastic, lead, gold, mirror];
 
 
 // Function that runs on every frame
@@ -90,10 +95,10 @@ function render(now) {
     -1,
   ];
 
-  // Identity Matrix
+  // cube
   let cM = [];
-  glMatrix.mat4.fromRotation(cM, now, [1, 0, 1]);
-  glMatrix.mat4.scale(cM, cM, [0.1, 0.5, 0.3]);
+  const rot = glMatrix.quat.fromEuler([], 20, now * 30, Math.sin(now) * 10);
+  glMatrix.mat4.fromRotationTranslationScale(cM, rot, [0, -0.4, 0], [0.7, 0.05, 0.6]);
   glMatrix.mat4.invert(cM, cM);
 
   drawScene(gl, now, lightCol, sc, cube, cM, mats);

@@ -11,7 +11,7 @@ uniform vec3 uLightsDir[nL];
 uniform vec3 uLightCol[nL];
 
 uniform vec4 uSpheres[uNumSpheres];
-uniform mat4 uMats[uNumSpheres];
+uniform mat4 uMats[uNumSpheres + 1];
 
 uniform mat4 uCIM;
 uniform vec4 uCube[6];
@@ -28,7 +28,7 @@ float fl = 3.0;
 const vec3 bgColor = vec3(.3, .4, .5);
 
 // Number of reflection bounces
-const int maxBounces = 3;
+const int maxBounces = 5;
 
 vec2 solveQuadratic(float a, float b, float c) {
   float d = b * b - 4. * a * c;
@@ -153,10 +153,11 @@ vec3 trace(vec3 V, vec3 W) {
       tMin = Nt.w;
       P = V + tMin * W;
       N = Nt.xyz;
-      mat = uMats[uNumSpheres - 1]; // + 1
+      mat = uMats[uNumSpheres];
     }
 
-    if (hit) {
+    // If the bounce ray hit something and it contributes something noticeable to the colour
+    if (hit && prop > 0.0005) {
 
       color += prop * shadeSurface(P, W, N, mat);
       prop *= mat[3].w;
