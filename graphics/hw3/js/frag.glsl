@@ -1,5 +1,4 @@
 #version 300 es
-
 precision highp float;
 
 // MODIFY STRING TO ADD NUMBER OF SPHERES.
@@ -21,14 +20,11 @@ uniform mat4 uQ[2];
 uniform float uTime;
 in vec3 vPos;
 
-// YOU CAN CHANGE CAMERA FOCAL LENGTH.
-// MAYBE YOU CAN TRY MAKING THIS A SLIDER.
-float fl = 3.0;
-
-const vec3 bgColor = vec3(.3, .4, .5);
-
-// Number of reflection bounces
-const int maxBounces = 5;
+const float fl = 3.0;                  // Focal Length
+const float n1 = 1.0;                  // AIR INDEX OF REFRACTION
+const float n2 = 1.5;                  // GLASS INDEX OF REFRACTION
+const int maxBounces = 3;              // Number of reflection bounces
+const vec3 bgColor = vec3(.3, .4, .5); // Sky background colour
 
 vec2 solveQuadratic(float a, float b, float c) {
   float d = b * b - 4. * a * c;
@@ -156,8 +152,8 @@ vec3 trace(vec3 V, vec3 W) {
       mat = uMats[uNumSpheres];
     }
 
-    // If the bounce ray hit something and it contributes something noticeable to the colour
-    if (hit && prop > 0.0005) {
+    // If the bounce ray hit something, and would be noticable
+    if (hit /*&& prop > 0.0005*/) {
 
       color += prop * shadeSurface(P, W, N, mat);
       prop *= mat[3].w;
