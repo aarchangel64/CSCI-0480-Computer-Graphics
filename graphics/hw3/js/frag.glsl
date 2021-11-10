@@ -2,15 +2,17 @@
 precision highp float;
 
 // MODIFY STRING TO ADD NUMBER OF SPHERES.
-const int uNumSpheres = 5;
+const int numSpheres = 5;
 const int nL = 2;
 
 // LIGHTS AND SPHERES DATA COMES FROM CPU.
 uniform vec3 uLightsDir[nL];
 uniform vec3 uLightCol[nL];
 
-uniform vec4 uSpheres[uNumSpheres];
-uniform mat4 uMats[uNumSpheres + 1];
+uniform vec4 uSpheres[numSpheres];
+uniform int uMats[numSpheres + 1];
+
+uniform sampler2D uTex;
 
 uniform mat4 uCIM;
 uniform vec4 uCube[6];
@@ -90,27 +92,33 @@ float raySphere(vec3 V, vec3 W, vec4 S) {
   return d < 0. ? -1. : -b - sqrt(d);
 }
 
+vec3 getMat(int material, int component) {
+  return texelFetch(uTex, ivec2(component, material), 0).rgb;
+}
+
 // GOURAUD SHADING WITH CAST SHADOWS.
-vec3 shadeSurface(vec3 P, vec3 W, vec3 N, mat4 m) {
-  vec3 Ambient = m[0].rgb;
-  vec3 Diffuse = m[1].rgb;
-  vec4 Specular = m[2];
+vec3 shadeSurface(vec3 P, vec3 W, vec3 N, int m) {
+  vec3 Ambient = getMat(m, 0);
+  vec3 Diffuse = getMat(m, 1);
+  vec3 Specular = getMat(m, 2);
+  float SpecPow = getMat(m, 3).x;
 
   vec3 c = Ambient;
   for (int l = 0; l < nL; l++) {
 
     // ARE WE SHADOWED BY ANY OTHER SPHERE?
     float t = -1.;
-    for (int n = 0; n < uNumSpheres; n++)
+    for (int n = 0; n < numSpheres; n++)
       t = max(t, raySphere(P, uLightsDir[l], uSpheres[n]));
 
+    // Are we shadowed by a cube?
     t = max(t, rayCube(P, uLightsDir[l], uCIM).w);
 
     // IF NOT, ADD LIGHTING FROM THIS LIGHT
     if (t < 0.) {
       vec3 R = 2. * dot(N, uLightsDir[l]) * N - uLightsDir[l];
       c += uLightCol[l] * Diffuse * max(0., dot(N, uLightsDir[l]));
-      c += uLightCol[l] * Specular.rgb * pow(max(0., dot(R, -W)), Specular.w);
+      c += uLightCol[l] * Specular * pow(max(0., dot(R, -W)), SpecPow);
     }
   }
 
@@ -126,15 +134,14 @@ vec3 trace(vec3 V, vec3 W) {
     float tMin = 10000.;
     vec3 P, N;
     vec4 sphere;
-    mat4 mat;
+    int mat;
     bool hit = false;
 
-    for (int n = 0; n < uNumSpheres; n++) {
+    for (int n = 0; n < numSpheres; n++) {
       float t = raySphere(V, W, uSpheres[n]);
       if (t > 0. && t < tMin) {
         hit = true;
         P = V + t * W;
-        // N = normalize(P - sphere.xyz);
         sphere = uSpheres[n];
         mat = uMats[n];
         tMin = t;
@@ -149,14 +156,14 @@ vec3 trace(vec3 V, vec3 W) {
       tMin = Nt.w;
       P = V + tMin * W;
       N = Nt.xyz;
-      mat = uMats[uNumSpheres];
+      mat = uMats[numSpheres];
     }
 
     // If the bounce ray hit something, and would be noticable
     if (hit /*&& prop > 0.0005*/) {
 
       color += prop * shadeSurface(P, W, N, mat);
-      prop *= mat[3].w;
+      prop *= getMat(mat, 3).y;
 
       V = P;
       W = 2. * N * dot(N, -W) + W;

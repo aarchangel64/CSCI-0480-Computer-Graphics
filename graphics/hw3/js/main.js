@@ -2,6 +2,7 @@
 import "https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js";
 import { setupCanvas } from "./canvas.js";
 import { initGL, drawScene } from "./gl.js";
+import { getMats } from "./materials.js";
 
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 
@@ -19,50 +20,8 @@ if (gl === null) {
 // Initialise Shaders
 await initGL(gl, canvas);
 
-// const matList =
-
-// class Material {
-//   constructor(diffuse, ambient, specular) {
-//     this.diffuse = diffuse;
-//     this.ambient = ambient;
-//     this.specular = specular;
-//   }
-// }
-
-// const copper = new Material(
-//   [0.15, 0.05, 0.025],
-//   [0.3, 0.1, 0.05],
-//   [0.6, 0.2, 0.1, 3]
-// );
-
-// const gold = new Material(
-//   [0.25, 0.15, 0.025],
-//   [0.5, 0.3, 0.05],
-//   [1, 0.6, 0.1, 6]
-// );
-
-// const lead = new Material([0.05, 0.05, 0.05], [0.1, 0.1, 0.1], [1, 1, 1, 5]);
-// const plastic = new Material([0.025, 0.0, 0.0], [0.5, 0.0, 0.0], [2, 2, 2, 20]);
-
-const copper = [
-  0.15, 0.05, 0.025, 0, 0.3, 0.1, 0.05, 0, 0.6, 0.2, 0.1, 5, 0, 0, 0, 0.05,
-];
-const gold = [
-  0.25, 0.15, 0.025, 0, 0.5, 0.3, 0.05, 0, 1, 0.6, 0.1, 3, 0, 0, 0, 0.4,
-];
-const lead = [
-  0.05, 0.05, 0.05, 0, 0.1, 0.1, 0.1, 0, 0.8, 0.8, 0.8, 10, 0, 0, 0, 0.1,
-];
-const plastic = [
-  0.025, 0.0, 0.0, 0, 0.5, 0.0, 0.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.005,
-];
-
-const mirror = [
-  0.2, 0.2, 0.2, 0, 1.0, 1.0, 1.0, 0, 2, 2, 2, 20, 0, 0, 0, 0.6,
-];
-
-const mats = [copper, gold, plastic, lead, gold, mirror];
-
+const list = getMats(gl);
+const mats = [list.copper, list.gold, list.plastic, list.lead, list.gold, list.mirror];
 
 // Function that runs on every frame
 function render(now) {

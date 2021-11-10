@@ -68,7 +68,9 @@ function drawScene(gl, deltaTime, lightCol, sData, cube, cM, mats) {
   gl.uniform3fv(pos("uLightCol"), lightCol);
 
   gl.uniform4fv(pos("uSpheres"), sData.flat());
-  gl.uniformMatrix4fv(pos("uMats"), false, mats.flat(2));
+  gl.uniform1iv(pos("uMats"), mats);
+
+  gl.uniform1i(pos("uTex"), 0);
 
   gl.uniform4fv(pos("uCube"), cube);
   gl.uniformMatrix4fv(pos("uCIM"), false, cM);
