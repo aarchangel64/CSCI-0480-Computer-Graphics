@@ -30,7 +30,7 @@ const programInfo = await shaderProgram(gl, "vertex.glsl", "fragment.glsl");
 const sphereBufferInfo = twgl.createBufferInfoFromArrays(gl, sphereArrays);
 const sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
 
-const cubeBufferInfo = twgl.createBufferInfoFromArrays(gl, sphereArrays);
+const cubeBufferInfo = twgl.createBufferInfoFromArrays(gl, cubeArrays);
 const cubeVAO = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
 
 const uniforms = {
@@ -57,23 +57,29 @@ function render(now) {
   const projectionMatrix = mat4.perspective([], fov, aspect, 1, 1000);
 
   // // Compute the camera's matrix using look at.
-  const cameraPosition = [5 * Math.sin(now), 5 * Math.cos(now), 5];
+  const cameraPosition = [5 * Math.sin(now), 5, 5 * Math.cos(now)];
   const target = [0, 0, 0];
   const up = [0, 1, 0];
   const viewMatrix = mat4.lookAt([], cameraPosition, target, up);
 
   const viewProjectionMatrix = mat4.multiply([], projectionMatrix, viewMatrix);
 
-  uniforms.uMatrix = viewProjectionMatrix;
+  mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [-1,0,0]);
 
   gl.useProgram(programInfo.program);
 
   // Setup all the needed attributes.
   gl.bindVertexArray(sphereVAO);
-
   twgl.setUniforms(programInfo, uniforms);
-
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, sphereBufferInfo.numElements)
+
+
+  mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [2,0,0]);
+
+  gl.bindVertexArray(cubeVAO);
+  twgl.setUniforms(programInfo, uniforms);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, cubeBufferInfo.numElements)
+
 
   requestAnimationFrame(render);
 }

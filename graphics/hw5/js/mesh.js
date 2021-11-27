@@ -153,14 +153,14 @@ let cube = face.reduce((a, b) => {
 const cubeArrays = {
 	Pos: {
 		numComponents: 3,
-		data: sphereMesh.pos
+		data: cube.pos
 	},
 	Norm: {
 		numComponents: 3,
-		data: sphereMesh.norm
+		data: cube.norm
 	},
 	UV: {
 		numComponents: 2,
-		data: sphereMesh.uv
+		data: cube.uv
 	},
 };
