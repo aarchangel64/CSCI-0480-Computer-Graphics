@@ -84,8 +84,8 @@ const sphereMesh = uvMesh(
 
 const squarePos = [
   -1,  1,  0,
-   1,  1,  0,
   -1, -1,  0,
+   1,  1,  0,
    1, -1,  0
 ];
 

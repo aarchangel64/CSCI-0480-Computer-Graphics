@@ -53,6 +53,7 @@ function render(now) {
 
   gl.enable(gl.CULL_FACE);
   gl.enable(gl.DEPTH_TEST);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   // Compute the projection matrix
   const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
