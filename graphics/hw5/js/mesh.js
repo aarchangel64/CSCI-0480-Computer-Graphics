@@ -34,6 +34,7 @@ class Mesh {
 		this.pos = this.#glueArray(this.pos, other.pos, 3);
 		this.norm = this.#glueArray(this.norm, other.norm, 3);
 		this.uv = this.#glueArray(this.uv, other.uv, 2);
+		return this;
 	}
 }
 
@@ -142,13 +143,7 @@ face[3] = trans(mat4.fromXRotation([], -Math.PI / 2));
 face[4] = trans(mat4.fromYRotation([], -Math.PI / 2));
 face[5] = trans(mat4.fromYRotation([], Math.PI / 2));
 
-let cube = face.reduce((a, b) => {
-	return {
-		pos: glueMeshes(a.pos, b.pos, 3),
-		norm: glueMeshes(a.norm, b.norm, 3),
-		uv: glueMeshes(squareUV, squareUV, 2),
-	};
-});
+let cube = face.reduce((a, b) => a.glueMesh(b));
 
 const cubeArrays = {
 	Pos: {
