@@ -7,7 +7,7 @@ const vec4 = glMatrix.vec4;
 import * as twgl from "../../../libs/twgl/twgl-full.module.js";
 
 import { shaderProgram } from "./gl.js";
-import { cube, sphereMesh } from "./mesh.js";
+import { cubeArrays, sphereArrays } from "./mesh.js";
 
 // Heavy guidance from https://webgl2fundamentals.org
 
@@ -27,15 +27,11 @@ twgl.setAttributePrefix("a"); // Tell the webglUtils to match position with a_po
 
 const programInfo = await shaderProgram(gl, "vertex.glsl", "fragment.glsl");
 
-const arrays = {
-  Pos: { numComponents: 3, data: cube.pos },
-  Norm: { numComponents: 3, data: cube.norm },
-  UV: { numComponents: 2, data: cube.uv },
-};
+const sphereBufferInfo = twgl.createBufferInfoFromArrays(gl, sphereArrays);
+const sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
 
-
-const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
-const vao = twgl.createVAOFromBufferInfo(gl, programInfo, bufferInfo);
+const cubeBufferInfo = twgl.createBufferInfoFromArrays(gl, sphereArrays);
+const cubeVAO = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
 
 const uniforms = {
   uMatrix: mat4.fromRotation([], 2, [1, 1, 0]),
@@ -73,11 +69,11 @@ function render(now) {
   gl.useProgram(programInfo.program);
 
   // Setup all the needed attributes.
-  gl.bindVertexArray(vao);
+  gl.bindVertexArray(sphereVAO);
 
   twgl.setUniforms(programInfo, uniforms);
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, bufferInfo.numElements)
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, sphereBufferInfo.numElements)
 
   requestAnimationFrame(render);
 }
