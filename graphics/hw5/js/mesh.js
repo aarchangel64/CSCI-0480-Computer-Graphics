@@ -70,8 +70,8 @@ const sphereMesh = uvMesh(
 		let sv = Math.sin(phi);
 		return new Mesh([cu * cv, su * cv, sv], [cu * cv, su * cv, sv], [u, v]);
 	},
-	20,
-	10
+	32,
+	32
 );
 
 const sphereArrays = {
