@@ -27,8 +27,8 @@ await initGL(gl);
 
 const uniforms = {
 	uMatrix: mat4.fromRotation([], 2, [1, 1, 0]),
- 	uLightsDir: [.57, .57, .57, 0., -0.5, -1.],
- 	uLightCol: [1, 1, 1, .5, .2, 0.05],
+	uLightsDir: [.57, .57, .57, 0., -0.5, -1.],
+	uLightCol: [1, 1, 1, .5, .2, 0.05],
 	uAmbient: [0.25, 0.15, 0.025],
 	uDiffuse: [0.5, 0.3, 0.05],
 	uSpecular: [1, 0.6, 0.1],
@@ -46,10 +46,10 @@ let mouseY = 0;
 
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
 document.addEventListener("mousemove", (e) => {
-  const cWidth = gl.canvas.width / (2 * devicePixelRatio);
-  const cHeight = gl.canvas.height / (2 * devicePixelRatio);
-  mouseX = clamp((e.clientX - (gl.canvas.offsetLeft + cWidth)) / cWidth, -1, 1);
-  mouseY = clamp((e.clientY - (gl.canvas.offsetTop + cHeight)) / cHeight, -1, 1);
+	const cWidth = gl.canvas.width / (2 * devicePixelRatio);
+	const cHeight = gl.canvas.height / (2 * devicePixelRatio);
+	mouseX = clamp((e.clientX - (gl.canvas.offsetLeft + cWidth)) / cWidth, -1, 1);
+	mouseY = clamp((e.clientY - (gl.canvas.offsetTop + cHeight)) / cHeight, -1, 1);
 });
 
 // Function that runs on every frame
@@ -68,6 +68,8 @@ function render(now) {
 	// Move the X and Z direction of Light 1
 	uniforms.uLightsDir[0] = 0.7 * Math.cos(now / 5);
 	uniforms.uLightsDir[2] = 0.7 * Math.sin(now / 5);
+	uniforms.uLightCol[1] = 0.7 + 0.3 * Math.cos(now / 2);
+	uniforms.uLightCol[0] = 0.8 + 0.2 * Math.sin(now / 5);
 
 	// Compute the camera's matrix using look at.
 	const cameraPosition = [5 * Math.sin(-Math.PI * mouseX), 5 * mouseY, 5 * Math.cos(-Math.PI * mouseX)];
@@ -77,12 +79,16 @@ function render(now) {
 
 	const viewProjectionMatrix = mat4.multiply([], projectionMatrix, viewMatrix);
 
-	mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [-1, 0, 0]);
-
-
-	drawSphere(uniforms);
-	mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [2, 0, 0]);
-	drawCube(uniforms);
+	const n = 10
+	for (let i = 0; i < n; i++) {
+		uniforms.uAmbient[2] = i / n;
+		mat4.scale(viewProjectionMatrix, viewProjectionMatrix, [0.9, 0.9, 0.9]);
+		const a = (2 * Math.PI * i + now * i) / n; 
+		mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [4*Math.cos(a), 0, 4*Math.sin(a)]);
+		drawSphere(uniforms);
+		mat4.translate(uniforms.uMatrix, viewProjectionMatrix, [4, 2*i, 2*i]);
+		drawCube(uniforms);
+	}
 
 	requestAnimationFrame(render);
 }
