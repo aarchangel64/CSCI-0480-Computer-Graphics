@@ -27,6 +27,8 @@ await initGL(gl);
 
 const uniforms = {
 	uMatrix: mat4.fromRotation([], 2, [1, 1, 0]),
+ 	uLightsDir: [.57, .57, .57, 0., -0.5, -1.],
+ 	uLightCol: [1, 1, 1, .5, .2, 0.05],
 	uAmbient: [0.25, 0.15, 0.025],
 	uDiffuse: [0.5, 0.3, 0.05],
 	uSpecular: [1, 0.6, 0.1],
@@ -37,6 +39,18 @@ const uniforms = {
 const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
 const fov = (60 * Math.PI) / 180;
 const projectionMatrix = mat4.perspective([], fov, aspect, 1, 1000);
+
+// Get the location of the mouse over the Canvas in the interval [-1.0, 1.0]
+let mouseX = 0;
+let mouseY = 0;
+
+const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
+document.addEventListener("mousemove", (e) => {
+  const cWidth = gl.canvas.width / (2 * devicePixelRatio);
+  const cHeight = gl.canvas.height / (2 * devicePixelRatio);
+  mouseX = clamp((e.clientX - (gl.canvas.offsetLeft + cWidth)) / cWidth, -1, 1);
+  mouseY = clamp((e.clientY - (gl.canvas.offsetTop + cHeight)) / cHeight, -1, 1);
+});
 
 // Function that runs on every frame
 function render(now) {
@@ -51,9 +65,12 @@ function render(now) {
 	gl.enable(gl.DEPTH_TEST);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+	// Move the X and Z direction of Light 1
+	uniforms.uLightsDir[0] = 0.7 * Math.cos(now / 5);
+	uniforms.uLightsDir[2] = 0.7 * Math.sin(now / 5);
 
 	// Compute the camera's matrix using look at.
-	const cameraPosition = [5 * Math.sin(now), 5, 5 * Math.cos(now)];
+	const cameraPosition = [5 * Math.sin(-Math.PI * mouseX), 5 * mouseY, 5 * Math.cos(-Math.PI * mouseX)];
 	const target = [0, 0, 0];
 	const up = [0, 1, 0];
 	const viewMatrix = mat4.lookAt([], cameraPosition, target, up);

@@ -15,10 +15,10 @@ out vec4 outColour;
 
 const float fl = 3.0;
 const int nL = 2;
-const vec3 uLightsDir[] = vec3[] (vec3(.57), vec3(0., -0.5, -1.));
-const vec3 uLightCol[] = vec3[] (vec3(1.), vec3(.5, .4, 0.05));
+uniform vec3 uLightsDir[nL]; 
+uniform vec3 uLightCol[nL]; 
 
-// GOURAUD SHADING WITH CAST SHADOWS.
+// GOURAUD SHADING WITHOUT CAST SHADOWS.
 vec3 shadeSurface(vec3 P, vec3 W, vec3 N) {
 	vec3 c = uAmbient;
 
