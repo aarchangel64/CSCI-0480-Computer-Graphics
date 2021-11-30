@@ -45,12 +45,15 @@ let mouseX = 0;
 let mouseY = 0;
 
 const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
-document.addEventListener("mousemove", (e) => {
-	const cWidth = gl.canvas.width / (2 * devicePixelRatio);
-	const cHeight = gl.canvas.height / (2 * devicePixelRatio);
-	mouseX = clamp((e.clientX - (gl.canvas.offsetLeft + cWidth)) / cWidth, -1, 1);
-	mouseY = clamp((e.clientY - (gl.canvas.offsetTop + cHeight)) / cHeight, -1, 1);
-});
+function mouseHandler(x, y) {
+	const cWidth = gl.canvas.width / 2;
+	const cHeight = gl.canvas.height / 2;
+	mouseX = clamp((x - (gl.canvas.offsetLeft + cWidth)) / cWidth, -1, 1);
+	mouseY = clamp((y - (gl.canvas.offsetTop + cHeight)) / cHeight, -1, 1);
+}
+document.addEventListener("mousemove", (e) => mouseHandler(e.clientX, e.clientY));
+document.addEventListener("touchmove", (e) => mouseHandler(e.touches[0].clientX, e.touches[0].clientY));
+
 
 // Function that runs on every frame
 function render(now) {
